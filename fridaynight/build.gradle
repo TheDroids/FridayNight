@@ -22,4 +22,6 @@ dependencies {
     compile 'com.android.support:support-v4:19.0.1'
     compile 'com.android.support:appcompat-v7:+'
     compile fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
+    compile files('lib/android-async-http-1.4.3.jar')
+    compile files('lib/universal-image-loader-1.9.1.jar')
 }
