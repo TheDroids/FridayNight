@@ -16,31 +16,33 @@ import com.thedroids.fridaynight.model.Movie;
 import java.util.List;
 
 public class MovieAdapter extends ArrayAdapter<Movie> {
+    static private ImageLoader imageLoader;
+
     public MovieAdapter(Context context, List<Movie> movies) {
         super(context, 0, movies);
+        imageLoader = ImageLoader.getInstance();
+        imageLoader.init(ImageLoaderConfiguration.createDefault(context));
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ImageLoader imageLoader = ImageLoader.getInstance();
         Context context = getContext();
+        View view = convertView;
 
-        if (convertView == null) {
+        if (view == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(
                     Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.movie_item, null);
-            imageLoader.init(ImageLoaderConfiguration.createDefault(context));
+            view = inflater.inflate(R.layout.movie_item, null);
         }
 
         Movie movie = getItem(position);
 
-        ImageView ivPosterImage = (ImageView) convertView.findViewById(R.id.ivPosterImage);
-        ivPosterImage.setImageResource(android.R.color.transparent);
-        ImageLoader.getInstance().displayImage(movie.getPosterOriginal(), ivPosterImage);
+        ImageView ivPosterImage = (ImageView) view.findViewById(R.id.ivPosterImage);
+        imageLoader.displayImage(movie.getPosterOriginal(), ivPosterImage);
 
-        TextView tvTitle = (TextView) convertView.findViewById(R.id.tvTitle);
+        TextView tvTitle = (TextView) view.findViewById(R.id.tvTitle);
         tvTitle.setText(movie.getTitle());
 
-        return convertView;
+        return view;
     }
 }
