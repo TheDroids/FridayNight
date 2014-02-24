@@ -10,6 +10,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,6 +21,7 @@ import java.util.Map;
 public class TheMovieDbClient {
     public TheMovieDbClient() {
         this.mAsyncHttpClient = new AsyncHttpClient();
+        this.mToday = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
     }
 
     /**
@@ -38,7 +41,31 @@ public class TheMovieDbClient {
                             put("api_key", API_KEY);
                             put("language", "en");
                             put("include_adult", "false");
-                            put("sort_by", "popularity.desc");
+                            put("sort_by", "release_date.desc");
+                            put("vote_count.gte", "10.0");
+                            put("release_date.lte", mToday);
+                        }
+                    });
+                    mAsyncHttpClient.get(url, params, responseHandler);
+                }
+            });
+        }
+    }
+
+    /**
+     * Get the list of popular movies on The Movie Database. This list refreshes every day.
+     *
+     * @param responseHandler The JSON response handler
+     */
+    public void popularMovies(final JsonHttpResponseHandler responseHandler) {
+        if (mConfiguration == null) {
+            getConfiguration(new AsyncTaskListener() {
+                @Override
+                public void onTaskComplete() {
+                    String url = getApiUrl("3/movie/popular");
+                    RequestParams params = new RequestParams(new HashMap<String, String>() {
+                        {
+                            put("api_key", API_KEY);
                         }
                     });
                     mAsyncHttpClient.get(url, params, responseHandler);
@@ -139,6 +166,7 @@ public class TheMovieDbClient {
 
     private static Map<String, String> mConfiguration;
     private AsyncHttpClient mAsyncHttpClient;
+    private final String mToday;
 
     private final String API_KEY = "2694dc7fbcf525196f0386adf2bce34a";
     private static final String API_BASE_URL = "http://api.themoviedb.org/";

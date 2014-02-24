@@ -13,7 +13,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.thedroids.fridaynight.R;
-import com.thedroids.fridaynight.fragment.RecommendedMovieFragment;
+import com.thedroids.fridaynight.fragment.PopularMoviesFragment;
+import com.thedroids.fridaynight.fragment.RecommendedMoviesFragment;
 
 import java.util.Locale;
 
@@ -79,7 +80,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.recommended_movie, menu);
+        getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
@@ -122,12 +123,12 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         }
 
         private Class[] fragmentClasses = new Class[] {
-                RecommendedMovieFragment.class
+                RecommendedMoviesFragment.class,
+                PopularMoviesFragment.class
         };
 
         @Override
         public Fragment getItem(int position) {
-            Log.v("SectionsPagerAdapter.getItem", String.valueOf(position));
             Class aClass = this.fragmentClasses[position];
             Fragment fragment = null;
 
@@ -139,13 +140,14 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                 e.printStackTrace();
             }
 
+            Log.v("SectionsPagerAdapter.getItem", "Returning " + fragment + " " + String.valueOf(position));
             return fragment;
         }
 
         @Override
         public int getCount() {
             // TODO: change to number of fragments/pages
-            return 1;
+            return 2;
         }
 
         @Override
@@ -156,8 +158,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                     return getString(R.string.title_section_recommended).toUpperCase(locale);
                 case 1:
                     return getString(R.string.title_section_top_10_this_week).toUpperCase(locale);
-                case 2:
-                    return getString(R.string.title_section_imdb).toUpperCase(locale);
             }
             return null;
         }
