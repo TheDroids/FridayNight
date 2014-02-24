@@ -43,6 +43,9 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
         TextView tvTitle = (TextView) view.findViewById(R.id.tvTitle);
         tvTitle.setText(movie.getTitle());
 
+        TextView tvSynopsis = (TextView) view.findViewById(R.id.tvSynopsis);
+        tvSynopsis.setText(movie.getSynopsis());
+
         return view;
     }
 }

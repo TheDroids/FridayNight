@@ -87,7 +87,6 @@ public class RecommendedMovieFragment extends Fragment {
                 List<Movie> movies = (List<Movie>) result;
                 mMovieAdapter.clear();
                 mMovieAdapter.addAll(movies);
-                Log.v("onResume", movies.toString());
             }
         });
     }

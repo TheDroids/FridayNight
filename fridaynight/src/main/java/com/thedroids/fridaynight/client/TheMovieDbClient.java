@@ -21,8 +21,13 @@ public class TheMovieDbClient {
         this.mAsyncHttpClient = new AsyncHttpClient();
     }
 
-    // http://api.themoviedb.org/3/discover/movie?api_key=API_KEY&language=en&include_adult=false&sort_by=popularity.desc&vote_average.gte=6.0
-    public void discoverMovies(final JsonHttpResponseHandler handler) {
+    /**
+     * Discover movies by different types of data like average rating, number of votes, genres and
+     * certifications. You can get a valid list of certifications from the /certifications method.
+     *
+     * @param responseHandler The JSON response handler
+     */
+    public void discoverMovies(final JsonHttpResponseHandler responseHandler) {
         if (mConfiguration == null) {
             getConfiguration(new AsyncTaskListener() {
                 @Override
@@ -36,10 +41,28 @@ public class TheMovieDbClient {
                             put("sort_by", "popularity.desc");
                         }
                     });
-                    mAsyncHttpClient.get(url, params, handler);
+                    mAsyncHttpClient.get(url, params, responseHandler);
                 }
             });
         }
+    }
+
+    /**
+     * Get the basic movie information for a specific movie id.
+     *
+     * @param movieId           The MovieDB ID of the movie
+     * @param responseHandler   The JSON response handler
+     */
+    public void getMovieDetail(final String movieId,
+                               final JsonHttpResponseHandler responseHandler) {
+        Log.v("getMovieDetail", "Fetching detail for " + movieId);
+        String url = getApiUrl("3/movie/" + movieId);
+        RequestParams params = new RequestParams(new HashMap<String, String>() {
+            {
+                put("api_key", API_KEY);
+            }
+        });
+        mAsyncHttpClient.get(url, params, responseHandler);
     }
 
     interface AsyncTaskListener {

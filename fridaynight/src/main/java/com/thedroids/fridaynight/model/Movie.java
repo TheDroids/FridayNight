@@ -1,7 +1,6 @@
 package com.thedroids.fridaynight.model;
 
 import com.thedroids.fridaynight.client.TheMovieDbClient;
-import com.thedroids.fridaynight.helper.MovieSite;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,20 +18,33 @@ import java.util.Map;
  * A Movie model class.
  */
 public class Movie {
-    public static Movie fromJson(final JSONObject jsonObject) {
+    public enum Provider {
+        Rotten_Tomatoes ("rotten_tomatoes"),
+        IMDB            ("imdb"),
+        The_Movie_DB    ("the_movie_db");
+
+        private Provider(String siteName) {
+            this.siteName = siteName;
+        }
+
+        private String siteName;
+    }
+
+    public static Movie fromJson(final JSONObject movieDbResult) {
         Movie movie = new Movie();
 
         try {
-            movie.setTitle(jsonObject.getString("title"));
+            movie.movieId.put(Provider.The_Movie_DB, String.valueOf(movieDbResult.getInt("id")));
+            movie.title = movieDbResult.getString("title");
             final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
-            movie.setReleaseDates(new HashMap<String, Date>() {
+            movie.releaseDates = new HashMap<String, Date>() {
                 {
-                    put("theatre", dateFormat.parse(jsonObject.getString("release_date")));
+                    put("theatre", dateFormat.parse(movieDbResult.getString("release_date")));
                 }
-            });
-            String posterImage = jsonObject.getString("poster_path");
-            movie.setPosterOriginal(TheMovieDbClient.getImageUrl(posterImage,
-                    TheMovieDbClient.PosterSize.MEDIUM));
+            };
+            String posterImage = movieDbResult.getString("poster_path");
+            movie.posterOriginal = TheMovieDbClient.getImageUrl(posterImage,
+                    TheMovieDbClient.PosterSize.MEDIUM);
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (ParseException e) {
@@ -58,164 +70,103 @@ public class Movie {
         return movieList;
     }
 
-    public Map<MovieSite, String> getMovieId() {
+    public void updateMovieDetails(JSONObject jsonObject) {
+        try {
+            JSONArray genres = jsonObject.getJSONArray("genres");
+            for (int i = 0; i < genres.length(); i++) {
+                String genre = genres.getJSONObject(i).getString("name");
+                this.genres.add(genre);
+            }
+            this.synopsis = jsonObject.getString("overview");
+            JSONArray studios = jsonObject.getJSONArray("production_companies");
+            for (int i = 0; i < studios.length(); i++) {
+                String studio = studios.getJSONObject(i).getString("name");
+                this.productionCompanies.add(studio);
+            }
+            this.runTime = jsonObject.getInt("runtime");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Map<Provider, String> getMovieId() {
         return movieId;
     }
 
-    public void setMovieId(Map<MovieSite, String> movieId) {
-        this.movieId = movieId;
+    public String getMovieId(Provider provider) {
+        return movieId.get(provider);
     }
 
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public int getYear() {
-        return year;
-    }
-
-    public void setYear(int year) {
-        this.year = year;
-    }
-
     public List<String> getGenres() {
         return genres;
-    }
-
-    public void setGenres(List<String> genres) {
-        this.genres = genres;
     }
 
     public String getMpaaRating() {
         return mpaaRating;
     }
 
-    public void setMpaaRating(String mpaaRating) {
-        this.mpaaRating = mpaaRating;
-    }
-
     public int getRunTime() {
         return runTime;
-    }
-
-    public void setRunTime(int runTime) {
-        this.runTime = runTime;
     }
 
     public String getCriticsConsensus() {
         return criticsConsensus;
     }
 
-    public void setCriticsConsensus(String criticsConsensus) {
-        this.criticsConsensus = criticsConsensus;
-    }
-
     public Map<String, Date> getReleaseDates() {
         return releaseDates;
-    }
-
-    public void setReleaseDates(Map<String, Date> releaseDates) {
-        this.releaseDates = releaseDates;
     }
 
     public String getCriticsRating() {
         return criticsRating;
     }
 
-    public void setCriticsRating(String criticsRating) {
-        this.criticsRating = criticsRating;
-    }
-
     public int getCriticsScore() {
         return criticsScore;
-    }
-
-    public void setCriticsScore(int criticsScore) {
-        this.criticsScore = criticsScore;
     }
 
     public String getAudienceRating() {
         return audienceRating;
     }
 
-    public void setAudienceRating(String audienceRating) {
-        this.audienceRating = audienceRating;
-    }
-
     public int getAudienceScore() {
         return audienceScore;
-    }
-
-    public void setAudienceScore(int audienceScore) {
-        this.audienceScore = audienceScore;
     }
 
     public String getSynopsis() {
         return synopsis;
     }
 
-    public void setSynopsis(String synopsis) {
-        this.synopsis = synopsis;
-    }
-
     public String getPosterThumbnail() {
         return posterThumbnail;
-    }
-
-    public void setPosterThumbnail(String posterThumbnail) {
-        this.posterThumbnail = posterThumbnail;
     }
 
     public String getPosterProfile() {
         return posterProfile;
     }
 
-    public void setPosterProfile(String posterProfile) {
-        this.posterProfile = posterProfile;
-    }
-
     public String getPosterDetailed() {
         return posterDetailed;
-    }
-
-    public void setPosterDetailed(String posterDetailed) {
-        this.posterDetailed = posterDetailed;
     }
 
     public String getPosterOriginal() {
         return posterOriginal;
     }
 
-    public void setPosterOriginal(String posterOriginal) {
-        this.posterOriginal = posterOriginal;
-    }
-
     public List<Map<String, Object>> getAbridgedCast() {
         return abridgedCast;
     }
 
-    public void setAbridgedCast(List<Map<String, Object>> abridgedCast) {
-        this.abridgedCast = abridgedCast;
-    }
-
-    public List<Map<String, String>> getAbridgedDirectors() {
+    public List<String> getAbridgedDirectors() {
         return abridgedDirectors;
     }
 
-    public void setAbridgedDirectors(List<Map<String, String>> abridgedDirectors) {
-        this.abridgedDirectors = abridgedDirectors;
-    }
-
-    public String getStudio() {
-        return studio;
-    }
-
-    public void setStudio(String studio) {
-        this.studio = studio;
+    public List<String> getProductionCompanies() {
+        return productionCompanies;
     }
 
     /**
@@ -227,7 +178,7 @@ public class Movie {
      *   IMDB: "9892181399"
      * }
      */
-    private Map<MovieSite, String> movieId;
+    private Map<Provider, String> movieId = new HashMap<Provider, String>();
 
     /**
      * Movie Title
@@ -235,13 +186,6 @@ public class Movie {
      * e.g., "Toy Story 3"
      */
     private String title;
-
-    /**
-     * Year of release
-     *
-     * e.g., 2010
-     */
-    private int year;
 
     /**
      * Movie Genre
@@ -254,7 +198,7 @@ public class Movie {
      *   "Comedy"
      * ]
      */
-    private List<String> genres;
+    private List<String> genres = new ArrayList<String>();
 
     /**
      * MPAA rating
@@ -287,7 +231,7 @@ public class Movie {
      *  "dvd": "2010-11-02"
      * }
      */
-    private Map<String, Date> releaseDates;
+    private Map<String, Date> releaseDates = new HashMap<String, Date>();
 
     /**
      * Critics rating
@@ -386,19 +330,19 @@ public class Movie {
      *   }
      * ]
      */
-    private List<Map<String, Object>> abridgedCast;
+    private List<Map<String, Object>> abridgedCast = new ArrayList<Map<String, Object>>();
 
     /**
      * List of Directors
      *
-     * e.g., [{"name": "Lee Unkrich"}]
+     * e.g., ["Lee Unkrich"]
      */
-    private List<Map<String, String>> abridgedDirectors;
+    private List<String> abridgedDirectors = new ArrayList<String>();
 
     /**
-     * The production studio
+     * The production companies
      *
-     * e.g., "Walt Disney Pictures"
+     * e.g., ["Walt Disney Pictures"]
      */
-    private String studio;
+    private List<String> productionCompanies = new ArrayList<String>();
 }
