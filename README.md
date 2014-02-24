@@ -1,6 +1,6 @@
 # FridayNight - Recommend your Friday night movie
 
-![Friday Night](designs/recommendations.jpg)
+![Friday Night Home Screen](designs/recommendations.jpg)
 
 ## User Stories
 
