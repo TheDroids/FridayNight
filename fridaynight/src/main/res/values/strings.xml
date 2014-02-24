@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">FridayNight</string>
+    <string name="app_name">Friday Night</string>
     <string name="title_section_recommended">Recommended</string>
     <string name="title_section_top_10_this_week">Top 10 this week</string>
     <string name="title_section_imdb">IMDB</string>
     <string name="action_settings">Settings</string>
-
     <string name="button_want_label">Want To See</string>
     <string name="button_ignore_label">Not Interested</string>
 
