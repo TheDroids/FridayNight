@@ -54,14 +54,15 @@ public class PopularMoviesFragment extends Fragment {
         Log.v("PopularMoviesFragment.onResume", "");
         super.onResume();
 
-        MovieService.popular(new MovieService.Listener() {
-            @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-            @Override
-            public void onResultAvailable(Object result) {
-                List<Movie> movies = (List<Movie>) result;
-                mMovieAdapter.clear();
-                mMovieAdapter.addAll(movies);
-            }
+        MovieService.popular(getString(R.string.moviedb_api_key),
+                new MovieService.Listener() {
+                    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+                    @Override
+                    public void onResultAvailable(Object result) {
+                        List<Movie> movies = (List<Movie>) result;
+                        mMovieAdapter.clear();
+                        mMovieAdapter.addAll(movies);
+                    }
         });
     }
 

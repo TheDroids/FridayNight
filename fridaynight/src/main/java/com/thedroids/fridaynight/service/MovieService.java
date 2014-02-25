@@ -31,9 +31,12 @@ public class MovieService {
     /**
      * Recommend movies for tonight.
      *
+     * @param apiKey          The MovieDB API key
      * @param serviceListener A listener that gets called whenever results are available
      */
-    public static void recommend(final Listener serviceListener) {
+    public static void recommend(final String apiKey, final Listener serviceListener) {
+        initClient(apiKey);
+
         if (sMovieList.isEmpty()) {
             sTheMovieDbClient.discoverMovies(new JsonHttpResponseHandler() {
                 @Override
@@ -69,9 +72,12 @@ public class MovieService {
     /**
      * Popular movies for tonight.
      *
+     * @param apiKey          The MovieDB API key
      * @param serviceListener A listener that gets called whenever results are available
      */
-    public static void popular(final Listener serviceListener) {
+    public static void popular(final String apiKey, final Listener serviceListener) {
+        initClient(apiKey);
+
         if (sPopularList.isEmpty()) {
             sTheMovieDbClient.popularMovies(new JsonHttpResponseHandler() {
                 @Override
@@ -144,9 +150,15 @@ public class MovieService {
         }
     }
 
+    private static void initClient(final String apiKey) {
+        if (sTheMovieDbClient == null) {
+            sTheMovieDbClient = new TheMovieDbClient(apiKey);
+        }
+    }
+
     private MovieService() {}
 
     private static List<Movie> sPopularList = new ArrayList<Movie>();
     private static List<Movie> sMovieList = new ArrayList<Movie>();
-    private static TheMovieDbClient sTheMovieDbClient = new TheMovieDbClient();
+    private static TheMovieDbClient sTheMovieDbClient;
 }

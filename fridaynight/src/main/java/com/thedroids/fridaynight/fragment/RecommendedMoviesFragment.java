@@ -79,14 +79,15 @@ public class RecommendedMoviesFragment extends Fragment {
         Log.v("RecommendedMoviesFragment.onResume", "");
         super.onResume();
 
-        MovieService.recommend(new MovieService.Listener() {
-            @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-            @Override
-            public void onResultAvailable(Object result) {
-                List<Movie> movies = (List<Movie>) result;
-                mMovieAdapter.clear();
-                mMovieAdapter.addAll(movies);
-            }
+        MovieService.recommend(getString(R.string.moviedb_api_key),
+                new MovieService.Listener() {
+                    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+                    @Override
+                    public void onResultAvailable(Object result) {
+                        List<Movie> movies = (List<Movie>) result;
+                        mMovieAdapter.clear();
+                        mMovieAdapter.addAll(movies);
+                    }
         });
     }
 

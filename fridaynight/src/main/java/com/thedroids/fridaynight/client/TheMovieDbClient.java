@@ -19,9 +19,10 @@ import java.util.Map;
  * The Movie Database client.
  */
 public class TheMovieDbClient {
-    public TheMovieDbClient() {
+    public TheMovieDbClient(final String apiKey) {
         this.mAsyncHttpClient = new AsyncHttpClient();
         this.mToday = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        this.mApiKey = apiKey;
     }
 
     /**
@@ -31,6 +32,8 @@ public class TheMovieDbClient {
      * @param responseHandler The JSON response handler
      */
     public void discoverMovies(final JsonHttpResponseHandler responseHandler) {
+        final String apiKey = this.mApiKey;
+
         if (mConfiguration == null) {
             getConfiguration(new AsyncTaskListener() {
                 @Override
@@ -38,7 +41,7 @@ public class TheMovieDbClient {
                     String url = getApiUrl("3/discover/movie");
                     RequestParams params = new RequestParams(new HashMap<String, String>() {
                         {
-                            put("api_key", API_KEY);
+                            put("api_key", apiKey);
                             put("language", "en");
                             put("include_adult", "false");
                             put("sort_by", "release_date.desc");
@@ -58,6 +61,8 @@ public class TheMovieDbClient {
      * @param responseHandler The JSON response handler
      */
     public void popularMovies(final JsonHttpResponseHandler responseHandler) {
+        final String apiKey = this.mApiKey;
+
         if (mConfiguration == null) {
             getConfiguration(new AsyncTaskListener() {
                 @Override
@@ -65,7 +70,7 @@ public class TheMovieDbClient {
                     String url = getApiUrl("3/movie/popular");
                     RequestParams params = new RequestParams(new HashMap<String, String>() {
                         {
-                            put("api_key", API_KEY);
+                            put("api_key", apiKey);
                         }
                     });
                     mAsyncHttpClient.get(url, params, responseHandler);
@@ -82,11 +87,12 @@ public class TheMovieDbClient {
      */
     public void getMovieDetail(final String movieId,
                                final JsonHttpResponseHandler responseHandler) {
+        final String apiKey = this.mApiKey;
         Log.v("getMovieDetail", "Fetching detail for " + movieId);
         String url = getApiUrl("3/movie/" + movieId);
         RequestParams params = new RequestParams(new HashMap<String, String>() {
             {
-                put("api_key", API_KEY);
+                put("api_key", apiKey);
             }
         });
         mAsyncHttpClient.get(url, params, responseHandler);
@@ -97,10 +103,11 @@ public class TheMovieDbClient {
     }
 
     protected void getConfiguration(final AsyncTaskListener listener) {
+        final String apiKey = this.mApiKey;
         String url = getApiUrl("3/configuration");
         RequestParams params = new RequestParams(new HashMap<String, String>() {
             {
-                put("api_key", API_KEY);
+                put("api_key", apiKey);
             }
         });
         AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
@@ -167,7 +174,7 @@ public class TheMovieDbClient {
     private static Map<String, String> mConfiguration;
     private AsyncHttpClient mAsyncHttpClient;
     private final String mToday;
+    private final String mApiKey;
 
-    private final String API_KEY = "2694dc7fbcf525196f0386adf2bce34a";
     private static final String API_BASE_URL = "http://api.themoviedb.org/";
 }
