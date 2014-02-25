@@ -36,20 +36,21 @@
         android:layout_height="wrap_content"
         android:id="@+id/btnWant"
         android:text="@string/button_want_label"
-        style="@style/DefaultButton"
         android:layout_below="@+id/tvSynopsis"
         android:layout_alignLeft="@+id/tvSynopsis"
-        android:layout_alignStart="@+id/tvSynopsis"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        style="@style/DefaultButton"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/btnIgnore"
+        android:text="@string/button_ignore_label"
         android:layout_alignTop="@+id/btnWant"
         android:layout_toRightOf="@id/btnWant"
         android:layout_marginLeft="10dp"
-        android:text="@string/button_ignore_label"
+        android:layout_marginBottom="16dp"
         style="@style/Button"/>
 
 </RelativeLayout>
