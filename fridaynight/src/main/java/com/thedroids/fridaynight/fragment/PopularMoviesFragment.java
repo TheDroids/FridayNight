@@ -1,7 +1,6 @@
 package com.thedroids.fridaynight.fragment;
 
 import android.annotation.TargetApi;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -39,10 +38,11 @@ public class PopularMoviesFragment extends Fragment {
         mMoviesList   = new ArrayList<Movie>();
         mMovieAdapter = new MovieAdapter(getActivity(), mMoviesList);
 
-        mProgressBar = (ProgressBar) getView().findViewById(R.id.pbLoading2);
-        mListView = (ListView) getView().findViewById(R.id.lvPopularMovies);
-        mListView.setEmptyView(mProgressBar);
-        mListView.setAdapter(mMovieAdapter);
+        mProgressIndicator = (ProgressBar) getView().findViewById(R.id.pbLoading2);
+        
+        mMoviesListView = (ListView) getView().findViewById(R.id.lvPopularMovies);
+        mMoviesListView.setEmptyView(mProgressIndicator);
+        mMoviesListView.setAdapter(mMovieAdapter);
 
         super.onActivityCreated(savedInstanceState);
     }
@@ -56,7 +56,6 @@ public class PopularMoviesFragment extends Fragment {
     @Override
     public void onResume() {
         Log.v("PopularMoviesFragment.onResume", "");
-        super.onResume();
 
         MovieService.popular(getString(R.string.moviedb_api_key),
                 new MovieService.Listener() {
@@ -68,10 +67,12 @@ public class PopularMoviesFragment extends Fragment {
                         mMovieAdapter.addAll(movies);
                     }
                 });
+
+        super.onResume();
     }
 
-    ListView mListView;
-    ProgressBar mProgressBar;
+    ListView mMoviesListView;
+    ProgressBar mProgressIndicator;
 
     List<Movie> mMoviesList;
     MovieAdapter mMovieAdapter;
