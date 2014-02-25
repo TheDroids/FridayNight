@@ -1,6 +1,7 @@
 package com.thedroids.fridaynight.fragment;
 
 import android.annotation.TargetApi;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,7 +9,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import com.thedroids.fridaynight.R;
 import com.thedroids.fridaynight.adapter.MovieAdapter;
@@ -62,8 +65,9 @@ public class RecommendedMoviesFragment extends Fragment {
         mMoviesList   = new ArrayList<Movie>();
         mMovieAdapter = new MovieAdapter(getActivity(), mMoviesList);
 
-        ListView lvMovieList = (ListView) getView().findViewById(R.id.lvMovieList);
-        lvMovieList.setAdapter(mMovieAdapter);
+        mProgressBar = (ProgressBar) getView().findViewById(R.id.pbLoading);
+        mListView = (ListView) getView().findViewById(R.id.lvMovieList);
+        mListView.setEmptyView(mProgressBar);
 
         super.onActivityCreated(savedInstanceState);
     }
@@ -87,9 +91,13 @@ public class RecommendedMoviesFragment extends Fragment {
                         List<Movie> movies = (List<Movie>) result;
                         mMovieAdapter.clear();
                         mMovieAdapter.addAll(movies);
+                        mListView.setAdapter(mMovieAdapter);
                     }
-        });
+                });
     }
+
+    ListView mListView;
+    ProgressBar mProgressBar;
 
     List<Movie> mMoviesList;
     MovieAdapter mMovieAdapter;

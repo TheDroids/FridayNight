@@ -9,4 +9,13 @@
         android:layout_height="fill_parent"
         android:id="@+id/lvMovieList"/>
 
+    <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/pbLoading"
+        android:layout_gravity="center"
+        android:indeterminate="false"
+        android:visibility="invisible"/>
+
 </FrameLayout>
