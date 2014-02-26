@@ -16,11 +16,12 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
         android:id="@+id/tvTitle"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/ivPosterImage"
-        android:paddingLeft="10dp"/>
+        android:paddingLeft="10dp"
+        android:textSize="22sp"
+        android:text="Title"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -29,7 +30,9 @@
         android:layout_below="@+id/tvTitle"
         android:layout_toRightOf="@id/ivPosterImage"
         android:layout_alignLeft="@id/tvTitle"
-        android:layout_marginLeft="10dp"/>
+        android:layout_marginLeft="10dp"
+        android:textSize="16sp"
+        android:text="Synopsis"/>
 
     <Button
         android:layout_width="wrap_content"
